@@ -14,7 +14,7 @@ public class LevelGenerator : MonoBehaviour {
 	public GameObject wallsParent;
 
 	// allows us to see the maze generation from the scene view
-	public bool generateRoof = true;
+	public bool generateRoof = false;
 
 	// number of times we want to "dig" in our maze
 	public int tilesToRemove = 50;
@@ -65,7 +65,6 @@ public class LevelGenerator : MonoBehaviour {
 				if (Random.value < 0.05 && numberOfHoles > 0 && !isWall) {
 					// We only want to spawn a certain number of holes so decrease our counter
 					numberOfHoles--;
-					CreateChildPrefab(floorPrefab, floorParent, x, -5, z);
 				} else {
 					// just create floor
 					CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
