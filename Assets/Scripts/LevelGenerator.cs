@@ -39,13 +39,17 @@ public class LevelGenerator : MonoBehaviour {
 		// initialize map 2D array
 		mapData = GenerateMazeData();
 
+		int numberOfHoles = (int) mazeSize / 10;
+		
 		// create actual maze blocks from maze boolean data
 		for (int z = 0; z < mazeSize; z++) {
 			for (int x = 0; x < mazeSize; x++) {
+				bool isWall = false;
 				if (mapData[z, x]) {
 					CreateChildPrefab(wallPrefab, wallsParent, x, 1, z);
 					CreateChildPrefab(wallPrefab, wallsParent, x, 2, z);
 					CreateChildPrefab(wallPrefab, wallsParent, x, 3, z);
+					isWall = true;
 				} else if (!characterPlaced) {
 					
 					// place the character controller on the first empty wall we generate
@@ -57,8 +61,15 @@ public class LevelGenerator : MonoBehaviour {
 					characterPlaced = true;
 				}
 
-				// create floor and ceiling
-				CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
+				// create floor and ceiling with a chance of spawning holes too but only do it on non walls
+				if (Random.value < 0.05 && numberOfHoles > 0 && !isWall) {
+					// We only want to spawn a certain number of holes so decrease our counter
+					numberOfHoles--;
+					CreateChildPrefab(floorPrefab, floorParent, x, -5, z);
+				} else {
+					// just create floor
+					CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
+				}
 
 				if (generateRoof) {
 					CreateChildPrefab(ceilingPrefab, wallsParent, x, 4, z);
